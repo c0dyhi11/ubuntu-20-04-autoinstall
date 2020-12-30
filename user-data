@@ -12,11 +12,10 @@ autoinstall:
           - default
         uri: 'http://ports.ubuntu.com/ubuntu-ports'
   identity:
-    hostname: anthos
-    password: >-
-      $6$ajWmZbgdOFQBpcrM$t5SAU/vhk7FvWkSRZDCEZpTrkHbkJd3F25v5/eQgcpk0hK.4ssR3Pmx69kgwIfVxuB3/tP7bED/P5SZw62HaG.
-    realname: anthos
-    username: anthos
+    hostname: ubuntu-server
+    password: '__PASSWORD__'
+    realname: __USER_NAME__
+    username: __USER_NAME__
   keyboard:
     layout: us
     toggle: null

@@ -7,7 +7,7 @@ UBUNTU_VERSION="20.04.1"
 ISO_NAME="ubuntu-20.04.1-live-server-amd64.iso"
 
 
-function show_usage() {
+function show_help() {
     echo "Usage:"
     echo "  ./build_iso.sh [options]"
     echo "  Options:"
@@ -53,6 +53,8 @@ function build_iso() {
     else
         sed -i '/authorized-keys: __REPLACE_ME__/d' $REPO_DIR/user-data
     fi
+    sed -i "s|__USER_NAME__|$1|g" $REPO_DIR/user-data
+    sed -i "s|__PASSWORD__|$2|g" $REPO_DIR/user-data
     xorriso -as mkisofs -r \
         -V Ubuntu\ custom\ amd64 \
         -o ubuntu-20.04.1-live-server-amd64-autoinstall.iso \
@@ -70,21 +72,35 @@ function flash_to_usb() {
 }
 
 
-if [ "$1" == "-F" ] && [ -z "$2" ]; then
-    install_packages
-    download_iso
-    build_iso
-    update_ssh_keys
-    flash_to_usb $2
-elif [ "$1" == "-h" ] || [ "$1" == "-H" ] || [ "$1" == "--help" ]; then
-    show_usage
-    exit 0
-elif [ -z "$1" ]; then
-    install_packages
-    download_iso
-    build_iso
-else
-    echo "Invalid syntax..."
-    show_usage
-    exit 1
+function ask_pass() {
+    PASSWORD=`openssl passwd -6`
+}
+
+
+OPTIND=1 
+USER="ubuntu"
+PASSWORD='$6$mRQxrAB6Y3bwOdwZ$MPbMoqpw1RnbgnTb0yXq.K9aQEeBVdw1.i6WN5MLKRVkc0Fv.0bIYsd/HtdTgfEJosDcro1JZ2Xgo.tbIsorY/'
+USB_DEV=""
+
+while getopts "h?uPF:" opt; do
+    case "$opt" in
+    h|\?)
+        show_help
+        exit 0
+        ;;
+    u)  USER=$OPTARG
+        ;;
+    P)  
+        ask_pass
+        ;;
+    F)  USB_DEV=$OPTARG
+        ;;
+    esac
+done
+
+install_packages
+download_iso
+build_iso $USER $PASSWORD
+if [ ! -z $USB_DEV ]; then
+    flash_to_usb $USB_DEV
 fi
