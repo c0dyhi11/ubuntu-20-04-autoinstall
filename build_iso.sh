@@ -11,8 +11,10 @@ function show_help() {
     echo "Usage:"
     echo "  ./build_iso.sh [options]"
     echo "  Options:"
-    echo "    -h [-H] [--help]          Show this help text"
-    echo "    -F /path/to/usb           Flash ISO to USB"
+    echo "    -h [-?]                   Show this help text"
+    echo "    -U <username>             Use this username at install time"
+    echo "    -P                        Prompt for password to use at install time"
+    echo "    -F </path/to/usb>         Flash ISO to USB"
 }
 
 
@@ -73,7 +75,16 @@ function flash_to_usb() {
 
 
 function ask_pass() {
-    PASSWORD=`openssl passwd -6`
+    echo -n Enter Password: 
+    read -s password
+    echo -n Retype Password:
+    read -s re_password
+    if [ "$password" == "$re_password" ]; then
+        PASSWORD=`echo -n $password | openssl passwd -6`
+    else
+        ehco "Passwords did not match! Exiting..."
+        exit 1
+    fi
 }
 
 
