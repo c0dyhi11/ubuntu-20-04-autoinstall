@@ -1,0 +1,80 @@
+#cloud-config
+autoinstall:
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+      - arches:
+          - amd64
+          - i386
+        uri: 'http://us.archive.ubuntu.com/ubuntu'
+      - arches:
+          - default
+        uri: 'http://ports.ubuntu.com/ubuntu-ports'
+  identity:
+    hostname: ubuntu-server
+    password: '__PASSWORD__'
+    realname: __USER_NAME__
+    username: __USER_NAME__
+  keyboard:
+    layout: us
+    toggle: null
+    variant: ''
+  locale: en_US
+  network:
+    ethernets:
+      eno1:
+        dhcp4: true
+    version: 2
+  ssh:
+    allow-pw: true
+    authorized-keys: __REPLACE_ME__
+    install-server: true
+  storage:
+    swap:
+      size: 0
+    config:
+      - ptable: gpt
+        wipe: superblock
+        preserve: false
+        name: ''
+        grub_device: false
+        type: disk
+        id: disk-0
+        path: /dev/nvme0n1
+      - device: disk-0
+        size: 536870912
+        wipe: superblock
+        flag: boot
+        number: 1
+        preserve: false
+        grub_device: true
+        type: partition
+        id: partition-0
+      - fstype: fat32
+        volume: partition-0
+        preserve: false
+        type: format
+        id: format-0
+      - device: disk-0
+        size: 249520193536
+        wipe: superblock
+        flag: ''
+        number: 2
+        preserve: false
+        type: partition
+        id: partition-1
+      - fstype: xfs
+        volume: partition-1
+        preserve: false
+        type: format
+        id: format-1
+      - device: format-1
+        path: /
+        type: mount
+        id: mount-1
+      - device: format-0
+        path: /boot/efi
+        type: mount
+        id: mount-0
+  version: 1
