@@ -8,13 +8,15 @@ ISO_NAME="ubuntu-20.04.1-live-server-amd64.iso"
 
 
 function show_help() {
+    echo ""
     echo "Usage:"
     echo "  ./build_iso.sh [options]"
     echo "  Options:"
     echo "    -h [-?]                   Show this help text"
-    echo "    -U <username>             Use this username at install time"
+    echo "    -u <username>             Use this username at install time"
     echo "    -P                        Prompt for password to use at install time"
     echo "    -F </path/to/usb>         Flash ISO to USB"
+    echo ""
 }
 
 
@@ -67,7 +69,6 @@ function build_iso() {
         -isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
         -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin  \
         $BASE_DIR/boot $BASE_DIR
-    rm -rf $BASE_DIR
 }
 
 
@@ -113,7 +114,7 @@ done
 
 install_packages
 download_iso
-build_iso $USER $PASSWORD
+build_iso "$USER" "$PASSWORD"
 if [ ! -z $USB_DEV ]; then
     flash_to_usb $USB_DEV
 fi
