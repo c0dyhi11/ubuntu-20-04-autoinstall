@@ -78,14 +78,10 @@ function flash_to_usb() {
 
 
 function ask_pass() {
-    echo -n Enter Password: 
-    read -s password
-    echo -n Retype Password:
-    read -s re_password
-    if [ "$password" == "$re_password" ]; then
-        PASSWORD=`echo -n $password | openssl passwd -6`
-    else
-        ehco "Passwords did not match! Exiting..."
+    PASSWORD=`openssl passwd -6`
+    RESULT=$?
+    if [ $RESULT -ne 0 ]; then
+        echo "Passwords did not match! Exiting..."
         exit 1
     fi
 }
@@ -96,25 +92,22 @@ USER="ubuntu"
 PASSWORD='$6$mRQxrAB6Y3bwOdwZ$MPbMoqpw1RnbgnTb0yXq.K9aQEeBVdw1.i6WN5MLKRVkc0Fv.0bIYsd/HtdTgfEJosDcro1JZ2Xgo.tbIsorY/'
 USB_DEV=""
 
-while getopts "h?uPF:" opt; do
+while getopts "h?u:PF:" opt; do
     case "$opt" in
     h|\?)
         show_help
         exit 0
         ;;
-    u)  USER=$OPTARG
-        ;;
-    P)  
-        ask_pass
-        ;;
-    F)  USB_DEV=$OPTARG
-        ;;
+    u)  USER="$OPTARG";;
+    P)  ask_pass;;
+    F)  USB_DEV="$OPTARG";;
     esac
 done
+shift $(($OPTIND-1))
 
 install_packages
 download_iso
 build_iso "$USER" "$PASSWORD"
 if [ ! -z $USB_DEV ]; then
-    flash_to_usb $USB_DEV
+    flash_to_usb "$USB_DEV"
 fi
