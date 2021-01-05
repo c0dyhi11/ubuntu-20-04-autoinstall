@@ -44,6 +44,7 @@ function inject_keys() {
 
 
 function build_iso() {
+    rm -rf $BASE_DIR
     mkdir -p $REPO_DIR
     7z x $ISO_NAME -x'![BOOT]' -o$BASE_DIR
     cp meta-data user-data $REPO_DIR
@@ -66,11 +67,12 @@ function build_iso() {
         -isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
         -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin  \
         $BASE_DIR/boot $BASE_DIR
+    rm -rf $BASE_DIR
 }
 
 
 function flash_to_usb() {
-    dd if=ubuntu-20.04.1-live-server-amd64-autoinstall.iso of=$1 bs=1M status=progress
+    sudo dd if=ubuntu-20.04.1-live-server-amd64-autoinstall.iso of=$1 bs=1M status=progress
 }
 
 
