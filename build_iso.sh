@@ -47,9 +47,10 @@ function inject_keys() {
 
 function build_iso() {
     rm -rf $BASE_DIR
-    mkdir -p $REPO_DIR
+    mkdir -p $BASE_DIR
     7z x $ISO_NAME -x'![BOOT]' -o$BASE_DIR
-    cp meta-data user-data $REPO_DIR
+    cp -r $SUB_DIR $BASE_DIR/
+    #cp meta-data user-data $REPO_DIR
     md5sum $BASE_DIR/README.diskdefines > $BASE_DIR/md5sum.txt
     sed -i "s|---|autoinstall ds=nocloud;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/isolinux/txt.cfg
     sed -i "s|---|autoinstall ds=nocloud\\\;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/boot/grub/grub.cfg
