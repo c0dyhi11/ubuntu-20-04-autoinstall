@@ -15,7 +15,7 @@ function show_help() {
     echo "    -h [-?]                   Show this help text"
     echo "    -u <username>             Use this username at install time"
     echo "    -P                        Prompt for password to use at install time"
-    echo "    -F </path/to/usb>         Flash ISO to USB"
+    echo "    -F </dev/sdX>             Flash ISO to USB"
     echo ""
 }
 
@@ -50,7 +50,6 @@ function build_iso() {
     mkdir -p $BASE_DIR
     7z x $ISO_NAME -x'![BOOT]' -o$BASE_DIR
     cp -r $SUB_DIR $BASE_DIR/
-    #cp meta-data user-data $REPO_DIR
     md5sum $BASE_DIR/README.diskdefines > $BASE_DIR/md5sum.txt
     sed -i "s|---|autoinstall ds=nocloud;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/isolinux/txt.cfg
     sed -i "s|---|autoinstall ds=nocloud\\\;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/boot/grub/grub.cfg
@@ -74,6 +73,7 @@ function build_iso() {
 
 
 function flash_to_usb() {
+    echo "Writing ISO to USB at $1. This can take around five minutes to complete..."
     sudo dd if=ubuntu-20.04.1-live-server-amd64-autoinstall.iso of=$1 bs=1M status=progress
 }
 
