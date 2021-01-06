@@ -33,7 +33,7 @@ Again... you'll be prompted to enter the password
 ./build_iso.sh -u myUsername -P -K myGitHubHandle
 ```
 
-### Build a genric ISO and write it to USB at sdc
+### Build a generic ISO and write it to USB at sdc
 ```bash 
 ./build_iso.sh -F /dev/sdc
 ```
