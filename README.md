@@ -24,10 +24,16 @@ You will be prompted for a password
 ### Build an ISO with custom Username and Password
 Again... you'll be prompted to enter the password
 ```bash 
-./build_iso.sh -u myusername -P
+./build_iso.sh -u myUsername -P
 ```
 
-### Build a genric ISO and write it to USB at sdc
+### Build an ISO with custom Username and Password and fetch SSH Keys using GitHub handle
+Again... you'll be prompted to enter the password
+```bash 
+./build_iso.sh -u myUsername -P -K myGitHubHandle
+```
+
+### Build a generic ISO and write it to USB at sdc
 ```bash 
 ./build_iso.sh -F /dev/sdc
 ```
@@ -35,10 +41,12 @@ Again... you'll be prompted to enter the password
 ### Building a custom ISO and writing it to USB
 Again... you'll be prompted to enter the password
 ```bash
-./build_iso.sh -u bestuser -P -F /dev/sdc
+./build_iso.sh -u bestuser -P -F /dev/sdc -K myGitHubHandle
 ```
 
 ## Adding SSH Keys
 To add ssh keys to the iso simply create a file named `pub_keys` in the same directory as `build_iso.sh`
 
 You may have more than one SSH key in this file, just make sure each key is on its own line.
+
+If your SSH key is on GitHub you can use the `-K <myGitHubHandle>` command as well. This will over write the pub_keys file... Currently there is no merge functionallity. Create an issue if you would like to see this feature. 

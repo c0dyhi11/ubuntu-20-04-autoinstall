@@ -16,6 +16,7 @@ function show_help() {
     echo "    -u <username>             Use this username at install time"
     echo "    -P                        Prompt for password to use at install time"
     echo "    -F </dev/sdX>             Flash ISO to USB"
+    echo "    -K <github_handle>        Pull SSH keys from github"
     echo ""
 }
 
@@ -88,12 +89,17 @@ function ask_pass() {
 }
 
 
+function fetch_ssh_keys() {
+    curl -Lo pub_keys https://github.com/$1.keys
+}
+
 OPTIND=1 
 USER="ubuntu"
 PASSWORD='$6$mRQxrAB6Y3bwOdwZ$MPbMoqpw1RnbgnTb0yXq.K9aQEeBVdw1.i6WN5MLKRVkc0Fv.0bIYsd/HtdTgfEJosDcro1JZ2Xgo.tbIsorY/'
 USB_DEV=""
+GIT_USER=""
 
-while getopts "h?u:PF:" opt; do
+while getopts "h?u:PF:K:" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -102,12 +108,16 @@ while getopts "h?u:PF:" opt; do
     u)  USER="$OPTARG";;
     P)  ask_pass;;
     F)  USB_DEV="$OPTARG";;
+    K)  GIT_USER="$OPTARG";;
     esac
 done
 shift $(($OPTIND-1))
 
 install_packages
 download_iso
+if [ ! -z $GIT_USER ]; then
+    fetch_ssh_keys "$GIT_USER"
+fi
 build_iso "$USER" "$PASSWORD"
 if [ ! -z $USB_DEV ]; then
     flash_to_usb "$USB_DEV"
