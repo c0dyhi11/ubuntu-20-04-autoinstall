@@ -81,6 +81,4 @@ autoinstall:
   late-commands:
     - sed -i "s/%sudo\tALL=(ALL:ALL) ALL/%sudo\tALL=(ALL:ALL) NOPASSWD:ALL/g" /target/etc/sudoers
     - curtin in-target --target /target systemctl disable ufw
-    - curtin in-target --target /target apt remove --assume-yes --purge apparmor ufw
     - curtin in-target --target /target systemctl disable apparmor
-    - curtin in-target --target /target apt remove --assume-yes --purge apparmor
