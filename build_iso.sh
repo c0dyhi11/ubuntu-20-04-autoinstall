@@ -17,6 +17,7 @@ function show_help() {
     echo "    -P                        Prompt for password to use at install time"
     echo "    -F </dev/sdX>             Flash ISO to USB"
     echo "    -K <github_handle>        Pull SSH keys from github"
+    echo "    -H <hostname>             The hostname to be set at install time"
     echo ""
 }
 
@@ -61,6 +62,7 @@ function build_iso() {
     fi
     sed -i "s|__USER_NAME__|$1|g" $REPO_DIR/user-data
     sed -i "s|__PASSWORD__|$2|g" $REPO_DIR/user-data
+    sed -i "s|__HOSTNAME__|$3|g" $REPO_DIR/user-data
     xorriso -as mkisofs -r \
         -V Ubuntu\ custom\ amd64 \
         -o ubuntu-20.04.1-live-server-amd64-autoinstall.iso \
@@ -98,8 +100,9 @@ USER="ubuntu"
 PASSWORD='$6$mRQxrAB6Y3bwOdwZ$MPbMoqpw1RnbgnTb0yXq.K9aQEeBVdw1.i6WN5MLKRVkc0Fv.0bIYsd/HtdTgfEJosDcro1JZ2Xgo.tbIsorY/'
 USB_DEV=""
 GIT_USER=""
+HOSTNAME="ubuntu-server"
 
-while getopts "h?u:PF:K:" opt; do
+while getopts "h?u:PF:K:H:" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -109,6 +112,7 @@ while getopts "h?u:PF:K:" opt; do
     P)  ask_pass;;
     F)  USB_DEV="$OPTARG";;
     K)  GIT_USER="$OPTARG";;
+    H)  HOSTNAME="$OPTARG";;
     esac
 done
 shift $(($OPTIND-1))
@@ -118,7 +122,7 @@ download_iso
 if [ ! -z $GIT_USER ]; then
     fetch_ssh_keys "$GIT_USER"
 fi
-build_iso "$USER" "$PASSWORD"
+build_iso "$USER" "$PASSWORD" "$HOSTNAME"
 if [ ! -z $USB_DEV ]; then
     flash_to_usb "$USB_DEV"
 fi

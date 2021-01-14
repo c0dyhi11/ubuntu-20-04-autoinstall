@@ -12,7 +12,7 @@ autoinstall:
           - default
         uri: 'http://ports.ubuntu.com/ubuntu-ports'
   identity:
-    hostname: ubuntu-server
+    hostname: __HOSTNAME__
     password: '__PASSWORD__'
     realname: __USER_NAME__
     username: __USER_NAME__
