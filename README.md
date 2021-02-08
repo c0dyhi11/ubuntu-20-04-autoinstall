@@ -44,6 +44,11 @@ Again... you'll be prompted to enter the password
 ./build_iso.sh -u bestuser -P -F /dev/sdc -K myGitHubHandle
 ```
 
+### Building a custom ISO with a different hostname
+```bash
+./build_iso.sh -H my-best-hostname
+```
+
 ## Adding SSH Keys
 To add ssh keys to the iso simply create a file named `pub_keys` in the same directory as `build_iso.sh`
 
