@@ -2,9 +2,9 @@
 BASE_DIR='iso'
 SUB_DIR='nocloud'
 REPO_DIR="$BASE_DIR/$SUB_DIR"
-UBUNTU_VERSION="20.04.1"
-UBUNTU_MIRROR="http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/$UBUNTU_VERSION/release/"
-ISO_NAME="ubuntu-$UBUNTU_VERSION-legacy-server-amd64.iso"
+UBUNTU_VERSION="20.04.2"
+UBUNTU_MIRROR="https://mirror.pit.teraswitch.com/ubuntu-releases"
+ISO_NAME="ubuntu-$UBUNTU_VERSION-live-server-amd64.iso"
 
 
 function show_help() {
@@ -33,7 +33,7 @@ function install_packages() {
 
 function download_iso() {
     if [ ! -f $ISO_NAME ]; then
-        wget $UBUNTU_MIRROR/$ISO_NAME
+        wget $UBUNTU_MIRROR/$UBUNTU_VERSION/$ISO_NAME
     fi
 }
 
@@ -65,7 +65,7 @@ function build_iso() {
     sed -i "s|__HOSTNAME__|$3|g" $REPO_DIR/user-data
     xorriso -as mkisofs -r \
         -V Ubuntu\ custom\ amd64 \
-        -o ubuntu-20.04.1-live-server-amd64-autoinstall.iso \
+        -o ubuntu-$UBUNTU_VERSION-live-server-amd64-autoinstall.iso \
         -J -l -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot \
         -boot-load-size 4 -boot-info-table \
         -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot \
@@ -77,7 +77,7 @@ function build_iso() {
 
 function flash_to_usb() {
     echo "Writing ISO to USB at $1. This can take around five minutes to complete..."
-    sudo dd if=ubuntu-20.04.1-live-server-amd64-autoinstall.iso of=$1 bs=1M status=progress
+    sudo dd if=ubuntu-$UBUNTU_VERSION-live-server-amd64-autoinstall.iso of=$1 bs=1M status=progress
 }
 
 
