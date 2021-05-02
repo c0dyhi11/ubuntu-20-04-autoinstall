@@ -2,9 +2,9 @@
 BASE_DIR='iso'
 SUB_DIR='nocloud'
 REPO_DIR="$BASE_DIR/$SUB_DIR"
-UBUNTU_MIRROR="https://mirror.pit.teraswitch.com/ubuntu-releases/"
 UBUNTU_VERSION="20.04.1"
-ISO_NAME="ubuntu-20.04.1-live-server-amd64.iso"
+UBUNTU_MIRROR="http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/$UBUNTU_VERSION/release/"
+ISO_NAME="ubuntu-$UBUNTU_VERSION-legacy-server-amd64.iso"
 
 
 function show_help() {
@@ -33,7 +33,7 @@ function install_packages() {
 
 function download_iso() {
     if [ ! -f $ISO_NAME ]; then
-        wget $UBUNTU_MIRROR/$UBUNTU_VERSION/$ISO_NAME
+        wget $UBUNTU_MIRROR/$ISO_NAME
     fi
 }
 
