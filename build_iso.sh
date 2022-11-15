@@ -2,7 +2,7 @@
 BASE_DIR='iso'
 SUB_DIR='nocloud'
 REPO_DIR="$BASE_DIR/$SUB_DIR"
-UBUNTU_VERSION="20.04.2"
+UBUNTU_VERSION="20.04.5"
 UBUNTU_MIRROR="https://mirror.pit.teraswitch.com/ubuntu-releases"
 ISO_NAME="ubuntu-$UBUNTU_VERSION-live-server-amd64.iso"
 
