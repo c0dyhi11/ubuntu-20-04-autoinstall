@@ -25,7 +25,7 @@ function show_help() {
 function install_packages() {
     if [ ! -f ./.apt_updated ]; then
         sudo apt update -y && \
-        sudo apt install syslinux-utils genisoimage p7zip-full xorriso wget isolinux -y && \
+        sudo apt install syslinux-utils genisoimage p7zip-full xorriso wget isolinux curl -y && \
         touch ./.apt_updated
     fi
 }
@@ -52,7 +52,7 @@ function build_iso() {
     mkdir -p $BASE_DIR
     7z x $ISO_NAME -x'![BOOT]' -o$BASE_DIR
     cp -r $SUB_DIR $BASE_DIR/
-    md5sum $BASE_DIR/README.diskdefines > $BASE_DIR/md5sum.txt
+    echo > "$BASE_DIR/md5sum.txt"
     sed -i "s|---|autoinstall ds=nocloud;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/isolinux/txt.cfg
     sed -i "s|---|autoinstall ds=nocloud\\\;s=/cdrom/$SUB_DIR/ ---|g" $BASE_DIR/boot/grub/grub.cfg
     if [ -f pub_keys ]; then
